@@ -1,0 +1,185 @@
+/* Arca chat theme — restyles the default cfx `chat` resource.
+   Glass message cards, an Arca green accent and a matching input / suggestion list. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@500&display=swap');
+
+:root {
+    --arca-accent: #00ff6a;
+    --arca-on-accent: #03140a;
+    --arca-text: #eef0f3;
+    --arca-muted: #9aa2ad;
+    --arca-card: rgba(12, 16, 19, 0.72);
+    --arca-card-solid: rgba(12, 16, 19, 0.94);
+    --arca-border: rgba(255, 255, 255, 0.06);
+}
+
+* { font-family: 'Inter', 'Segoe UI', sans-serif !important; }
+
+/* ---------------- window ---------------- */
+.chat-window {
+    top: 2.2% !important;
+    left: 1.1% !important;
+    width: 31% !important;
+    min-width: 380px;
+    height: 25% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+.chat-messages {
+    margin: 0 !important;
+    height: 100% !important;
+    padding: 4px 6px 4px 0;
+    font-size: 1.45vh !important;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 10%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 10%);
+}
+.msg {
+    margin-bottom: 5px !important;
+    color: var(--arca-text);
+    text-shadow: none;
+}
+
+/* ---------------- message cards ---------------- */
+.arca-msg {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    max-width: 100%;
+    padding: 7px 12px 7px 14px;
+    border-radius: 10px;
+    background: var(--arca-card);
+    border: 1px solid var(--arca-border);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+    line-height: 1.4;
+    animation: arca-in .22s cubic-bezier(.2, .9, .3, 1.2);
+}
+/* accent bar */
+.arca-msg::before {
+    content: '';
+    position: absolute; left: 0; top: 7px; bottom: 7px;
+    width: 3px; border-radius: 0 3px 3px 0;
+    background: var(--bar, var(--arca-accent));
+}
+@keyframes arca-in { from { opacity: 0; transform: translateX(-10px) scale(.98); } }
+
+.arca-author {
+    font-weight: 800;
+    color: var(--name, var(--arca-accent));
+    white-space: nowrap;
+}
+.arca-author::after { content: ':'; color: var(--arca-muted); font-weight: 600; margin-left: 1px; }
+.arca-author:empty { display: none; }
+.arca-text { color: var(--arca-text); font-weight: 500; word-break: break-word; white-space: pre-line; }
+
+/* single-line system text */
+.arca-plain { --bar: #4b5563; }
+.arca-plain .arca-text { color: #d6dbe1; }
+
+/* console / resource output: compact mono line */
+.arca-print {
+    --bar: transparent;
+    padding: 4px 10px;
+    gap: 7px;
+    align-items: center;
+    background: rgba(12, 16, 19, .55);
+    box-shadow: none;
+}
+.arca-print .arca-text { font-family: 'JetBrains Mono', monospace !important; font-size: .9em; color: #b8c0ca; white-space: pre-wrap; }
+.arca-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--arca-accent); flex: none; box-shadow: 0 0 6px var(--arca-accent); }
+
+/* badges for the arca_* templates */
+.arca-badge {
+    align-self: center;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: .68em;
+    font-weight: 800;
+    letter-spacing: .08em;
+    background: var(--bar, var(--arca-accent));
+    color: var(--badge-text, var(--arca-on-accent));
+}
+.arca-tag[data-kind="system"] { --bar: #4c8dff; --badge-text: #fff; --name: #8fb6ff; }
+.arca-tag[data-kind="announce"] { --bar: #ffb547; --badge-text: #1c1203; background: linear-gradient(90deg, rgba(60, 40, 6, .85), var(--arca-card) 70%); }
+.arca-tag[data-kind="staff"] { --bar: #ff4d5e; --badge-text: #fff; --name: #ff9aa4; }
+.arca-tag[data-kind="ooc"] { --bar: #6b7280; --badge-text: #fff; --name: #c8ced6; }
+.arca-tag[data-kind="me"] { --bar: #b57bff; --badge-text: #fff; }
+.arca-tag[data-kind="me"] .arca-text { color: #dcc4ff; font-style: italic; }
+.arca-tag[data-kind="error"] { --bar: #ff4d5e; --badge-text: #fff; }
+
+/* ---------------- input ---------------- */
+.chat-input {
+    top: 28.4% !important;
+    left: 1.1% !important;
+    width: 31% !important;
+    min-width: 380px;
+    font-size: 1.5vh !important;
+}
+/* only the input row: other divs in here (hide-state text, suggestions) must keep their own
+   styles, and no display !important, or it would beat the chat's own display:none when closed */
+.chat-input > div.input {
+    display: flex;
+    align-items: stretch;
+    background: var(--arca-card-solid) !important;
+    border: 1px solid rgba(0, 255, 106, .25) !important;
+    border-radius: 12px !important;
+    overflow: hidden;
+    box-shadow: 0 10px 34px rgba(0, 0, 0, .5), 0 0 0 3px rgba(0, 255, 106, .06);
+}
+.chat-input .prefix {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    padding: 0 12px !important;
+    margin: 0 !important;
+    height: auto !important;
+    background: var(--arca-accent) !important;
+    color: var(--arca-on-accent) !important;
+    font-weight: 800;
+}
+.chat-input textarea {
+    background: transparent !important;
+    color: var(--arca-text) !important;
+    padding: 11px 14px !important;
+    line-height: 1.4 !important;
+    caret-color: var(--arca-accent);
+}
+.chat-input textarea::placeholder { color: var(--arca-muted); }
+
+/* ---------------- command suggestions ---------------- */
+.suggestions {
+    margin-top: 6px !important;
+    padding: 6px !important;
+    max-height: 32vh;
+    overflow-y: auto;
+    background: var(--arca-card-solid) !important;
+    border: 1px solid var(--arca-border) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, .5);
+    color: var(--arca-text) !important;
+    font-size: 1.35vh !important;
+    list-style: none;
+}
+.suggestion {
+    margin: 0 !important;
+    padding: 7px 10px !important;
+    border-radius: 8px;
+    border-bottom: 1px solid var(--arca-border);
+}
+.suggestion:last-child { border-bottom: 0; }
+.suggestion:hover { background: rgba(255, 255, 255, .04); }
+.suggestion > p { margin: 0; }
+.suggestion > p > span:first-child, .suggestion b { color: var(--arca-accent); font-weight: 800; }
+.param { color: #c8ced6; padding: 0 3px; }
+.param.disabled { color: var(--arca-muted) !important; }
+.help, .disabled { color: var(--arca-muted) !important; font-size: .92em; margin-top: 2px; }
+.suggestions::-webkit-scrollbar, .chat-messages::-webkit-scrollbar { width: 4px; }
+.suggestions::-webkit-scrollbar-thumb, .chat-messages::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .12); border-radius: 2px; }
+
+/* the chat's built-in .multiline style (negative text-indent + left margin) pulls text out of
+   the cards and makes name / text overlap: neutralise it */
+.msg, .msg.multiline, .multiline, .msg > span {
+    margin-left: 0 !important;
+    text-indent: 0 !important;
+}
